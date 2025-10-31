@@ -1,6 +1,7 @@
 # Created by https://www.toptal.com/developers/gitignore/api/django,venv,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=django,venv,visualstudiocode
 
+venv/
 ### Django ###
 *.log
 *.pot
@@ -55,4 +56,4 @@ pip-delete-this-directory.txt
 
 # Unit test / coverage reports
 htmlcov/
-.tox/
+.tox/venv/
