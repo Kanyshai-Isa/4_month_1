@@ -1,19 +1,11 @@
 {% extends "base.html" %}
-{% load static %}
 {% block content %}
-{% for post in posts %}
 <div class="card" style="width: 18rem;">
-    {% if post.image %}
   <img src="{{post.image.url}}" class="card-img-top" alt="...">
-  {% else %}
-  <img src="{% static 'general-img-landscape.png' %}" class="card-img-top" alt="...">
-  {% endif %}
   <div class="card-body">
     <h5 class="card-title">Card title</h5>
     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
-    <a href="/posts/{{post.id}}" class="btn btn-primary">Go somewhere</a>
   </div>
 </div>
-{% endfor %}
 {% endblock %}
 
