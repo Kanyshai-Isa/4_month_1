@@ -5,21 +5,26 @@ from django.utils import timezone
 
 """
 create table post (id serial primary key autoincrement, titlevarchar (255) )
-
 """
+
 """
 select * from posts: --> Post.objects.all()
 """
+
 """ 
 select 1 from posts where id=1; --> Post.objects.get(id=1)
 """
+
 """
 select * from posts where title ILIKE '%test%'; --> Post.objects.filter(title_incontains='test')
 """
+
 """
 insert into posts(titltle, content) values ("title", "content"); --> Post.object.create(title="title", content="content")
 """
-
+"""
+select * from from posts order by rate title; --> Post.objects.all().order_by("-rate")
+"""
 
 class Category (models.Model):
     name = models.CharField(max_length=100)
@@ -39,8 +44,8 @@ class Post(models.Model):
     content = models.CharField(max_length=1000, null=True, blank=True)
     rate = models.IntegerField(default=0)
     category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
     tags = models.ManyToManyField(Tag, blank=True)
 
     def __str__(self):
