@@ -6,8 +6,8 @@ from posts.models import Post, Category, Tag
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ("title", "category", "rate")
-    list_editable = ("category",)
+    list_display = ("title", "author", "category", "rate")
+    list_editable = ("author",)
 
 
 admin.site.register(Category)

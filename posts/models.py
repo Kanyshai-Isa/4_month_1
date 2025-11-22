@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -39,6 +40,7 @@ class Tag(models.Model):
         return f"{self.name}"
 
 class Post(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     image = models.ImageField(null=True, blank=True)
     title = models.CharField(max_length=250)
     content = models.CharField(max_length=1000, null=True, blank=True)

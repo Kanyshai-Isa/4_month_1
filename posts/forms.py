@@ -14,13 +14,13 @@ class PostForm(forms.Form):
             raise forms.ValidationError("JavaScript is a bad language")
         return title
     
-    def clean_image(self):
-        cleaned_data = super().clean()
-        image = cleaned_data.get("image")
-        name = image.name.split(".")[-1]
-        if name not in ["jpg", "jpeg"]:
-            raise forms.ValidationError("Only .jpg and .jpeg images are allowed")
-        return image
+    # def clean_image(self):
+    #     cleaned_data = super().clean()
+    #     image = cleaned_data.get("image")
+    #     name = image.name.split(".")[-1]
+    #     if name not in ["jpg", "jpeg"]:
+    #         raise forms.ValidationError("Only .jpg and .jpeg images are allowed")
+    #     return image
     
 class PostForm2(forms.ModelForm):
     class Meta:

@@ -4,6 +4,8 @@ from posts.models import Post
 from posts.forms import PostForm2, SearchForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.views import View
+from django.views.generic import ListView, DetailView, CreateView
 
 """
 posts = [post1, post2, post3,post4,post5,post6,post7,post8,post9,post10....post20]
@@ -14,19 +16,29 @@ start = (page - 1 ) *limit = 8
 end = page * limit = 12
 """
 
+class TestView(View):
+    def get(self, request):
+        return HttpResponse("Hello world!")
+
+
 
 def home_view(request):
     if request.method == "GET":
         return render(request, "base.html")
 
-# Create your views here.
+
+
 
 def test_view(request):
     return HttpResponse(f"Рвндомное число: {randint(1,1000)}")
 
+
+
 def html_view(request):
     if request.method == "GET":
         return render(request, "base.html")
+
+
 
 @login_required(login_url="/login/")
 def posts_list_view(request):
@@ -59,11 +71,25 @@ def posts_list_view(request):
             posts = posts[start:end]
         return render(request, "posts/posts_list.html", context={"posts": posts, "form": form, "max_pages": range(1, max_pages+1)})
 
+
+class PostListView(ListView):
+    model = Post
+    template_name = "posts/posts_list.html"
+    context_object_name = "posts"
+
+
 @login_required(login_url="/login/")
 def post_detail_view(request, post_id):
     if request.method == "GET":
         post = Post.objects.get(id=post_id)
         return render(request, "posts/post_detail.html", context={"post":post})
+
+
+class PostDetailView(DetailView):
+    model = Post
+    template_name = "posts/post_detail.html"
+    context_object_name = "post"
+
 
 @login_required(login_url="/login/")  
 def post_create_view (request):
@@ -84,3 +110,24 @@ def post_create_view (request):
             return redirect("/posts")
         except Exception as e:
             return HttpResponse(f"Error: {e}")
+        
+
+class PostCreateView(CreateView):
+    model = Post
+    form_class = PostForm2
+    template_name ="posts/post_create.html"
+    success_url = "/posts"
+
+
+@login_required(login_url="/login/")
+def post_update_view(request, post_id):
+    post = Post.objects.get(id=post_id, author=request.user)
+    if request.method == "GET":
+        form = PostForm2(instance=post)
+        return render(request, "posts/post_update.html", context={"form":form})
+    if request.method == "POST":
+        form = PostForm2(request.POST, request.FILES, instance=post)
+        if not form.is_valid():
+            return render(request, "posts/post_update.html", context={"form":form})
+        form.save()
+        return redirect("/profile")

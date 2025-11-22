@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.models import User
+from posts.models import Post
 from users.forms import LoginForm, RegistrationForm
 from django.contrib.auth import login, authenticate, logout
+from users.models import Profile
+from django.contrib.auth.decorators import login_required
 
 def register_view(request):
     if request.method == "GET":
@@ -12,10 +15,14 @@ def register_view(request):
         if not form.is_valid():
             return render (request, "users/register.html", context={"form": form})
         try:
+            form.cleaned_data.__delitem__("password_confirm")
+            age = form.cleaned_data.pop("age")
+            image = form.cleaned_data.pop("image")
             user = User.objects.create_user(
-                username=form.cleaned_data["username"],
-                password=form.cleaned_data["password"],
+                **form.cleaned_data
             )
+            if user:
+                Profile.objects.create(user=user, age=age, image=image)
             return redirect("/")
         except Exception as e:
             return HttpResponse(f"Error: {e}")
@@ -36,7 +43,19 @@ def login_view(request):
         login(request, user)
         return redirect("/")
     
-
+@login_required(login_url="/login/")
 def logout_view(request):
     logout(request)
     return redirect("/")
+
+
+@login_required(login_url="/login/")
+def profile_view(request):
+    if request.method == "GET":
+        user = request.user
+        try:
+            profile = Profile.objects.get(user=user)
+            posts = Post.objects.filter(author=user)
+        except Exception:
+            return HttpResponse("no profile found")
+        return render(request, "users/profile.html", context={"profile":profile, "posts": posts})

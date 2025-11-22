@@ -9,7 +9,7 @@
 </form>
 {% for post in posts %}
 <div class="card" style="width: 18rem;">
-    {% if post.image %}
+  {% if post.image %}
   <img src="{{post.image.url}}" class="card-img-top" alt="...">
   {% else %}
   <img src="{% static 'general-img-landscape.png' %}" class="card-img-top" alt="...">
